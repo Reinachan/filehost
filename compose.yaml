@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  filehost:
+    container_name: filehost
+    build: ./Filehost
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./Filehost/files:/files
+
+  caddy:
+    container_name: caddy
+    build: ./Caddy
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./Caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./Caddy/site:/srv
+      - ./Caddy/data:/data
+      - ./Caddy/config:/config
+    user: root
+    depends_on:
+      - cloudflared
+
+  cloudflared:
+    container_name: cloudflared
+    build:
+      context: ./Cloudflared
+      args:
+        DOMAIN: '${DOMAIN}'
+        TUNNEL_UUID: '${TUNNEL_UUID}'
+    env_file:
+      - .env
+    command: 'tunnel --config /etc/cloudflared/config.yml run'
+    restart: unless-stopped
+    user: root

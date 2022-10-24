@@ -1,0 +1,13 @@
+tunnel: <tunnel-uuid>
+credentials-file: /etc/cloudflared/<tunnel-uuid>.json
+
+ingress:
+  - hostname: '<domain.tld>'
+    service: https://caddy:443
+    originRequest:
+      originServerName: '<domain.tld>'
+  - hostname: '*.<domain.tld>'
+    service: https://caddy:443
+    originRequest:
+      originServerName: '*.<domain.tld>'
+  - service: http_status:404

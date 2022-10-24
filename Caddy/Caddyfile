@@ -1,0 +1,34 @@
+{
+        acme_dns cloudflare {$CF_API_TOKEN}
+}
+
+(redirect) {
+        @http {
+                protocol http
+        }
+        redir @http https://{host}{uri} permanent
+}
+
+
+*.{$DOMAIN} {
+
+        @filehost host {$FILEHOST_DOMAIN}
+        handle @filehost {
+                import redirect
+                basicauth / {
+                        {$FILEHOST_USERNAME} {$FILEHOST_PASSWORD}
+                }
+                reverse_proxy filehost:80
+        }
+        
+        @ping host ping.{$DOMAIN}
+        handle @ping {
+                respond "Pong!"
+        }
+
+        handle {
+                abort
+        }
+
+}
+

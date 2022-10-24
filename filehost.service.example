@@ -1,0 +1,14 @@
+[Unit]
+Description=%i service with docker compose
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+WorkingDirectory=/home/<username>/Documents/GitHub/filehost # adjust path to fit where you've stored this folder
+ExecStart=/usr/bin/docker compose up -d --remove-orphans  # might have to use /usr/bin/local/docker depending on installation method
+ExecStop=/usr/bin/docker compose down                     # same as the comment above
+
+[Install]
+WantedBy=multi-user.target

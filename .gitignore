@@ -1,0 +1,15 @@
+# Caddy
+Caddy/*
+!Caddy/Caddyfile
+!Caddy/Dockerfile
+
+# Cloudflare
+Cloudflared/config/*
+!Cloudflared/config/config.yml
+
+# Filehost
+Filehost/files
+
+# General
+.env
+filehost.service
